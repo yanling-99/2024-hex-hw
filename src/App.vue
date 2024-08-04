@@ -11,20 +11,16 @@ const items = ref([
   { item: "抹茶拿鐵", desc: "抹茶與鮮奶的絕配", price: 60, count: 20 },
 ]);
 const isEditItemName = ref(false);
-const editId = ref(0);
+const editIndex = ref(-1);
 const newItemName = ref("");
 
-const minusCount = (index) => {
-  items.value[index].count--;
-};
-
-const addCount = (index) => {
-  items.value[index].count++;
+const updateCount = (index, amount) => {
+  items.value[index].count += amount;
 };
 
 const editItemName = (index) => {
   isEditItemName.value = !isEditItemName.value;
-  editId.value = index;
+  editIndex.value = index;
   newItemName.value = items.value[index].item;
 };
 
@@ -35,7 +31,7 @@ const cancelBtn = (index) => {
 const confirmBtn = (index) => {
   items.value[index].item = newItemName.value;
   isEditItemName.value = !isEditItemName.value;
-  editId.value = 0;
+  editIndex.value = 0;
 };
 </script>
 
@@ -64,9 +60,11 @@ const confirmBtn = (index) => {
         </td>
         <td>{{ item.price }}</td>
         <td>
-          <button @click="minusCount(index)">-</button>
+          <button @click="updateCount(index, -1)" :disabled="item.count === 0">
+            -
+          </button>
           {{ item.count }}
-          <button @click="addCount(index)">+</button>
+          <button @click="updateCount(index, 1)">+</button>
         </td>
         <td v-if="isEditItemName && editId === index">
           <button @click="confirmBtn(index)">確定</button>
