@@ -18,20 +18,24 @@ const updateCount = (index, amount) => {
   items.value[index].count += amount;
 };
 
-const editItemName = (index) => {
-  isEditItemName.value = !isEditItemName.value;
-  editIndex.value = index;
-  newItemName.value = items.value[index].item;
-};
-
-const cancelBtn = (index) => {
-  isEditItemName.value = !isEditItemName.value;
-};
-
-const confirmBtn = (index) => {
-  items.value[index].item = newItemName.value;
-  isEditItemName.value = !isEditItemName.value;
-  editIndex.value = 0;
+const editState = (index, action) => {
+  switch (action) {
+    case "confirm":
+      isEditItemName.value = false;
+      items.value[index].item = newItemName.value;
+      break;
+    case "cancel":
+      isEditItemName.value = false;
+      break;
+    case "edit":
+      isEditItemName.value = true;
+      editIndex.value = index;
+      newItemName.value = items.value[index].item;
+      break;
+    default:
+      console.log("沒有任何操作");
+      break;
+  }
 };
 </script>
 
@@ -49,7 +53,7 @@ const confirmBtn = (index) => {
     <tbody>
       <tr v-for="(item, index) in items" :key="index">
         <input
-          v-if="isEditItemName && editId === index"
+          v-if="isEditItemName && editIndex === index"
           type="text"
           v-model="newItemName"
         />
@@ -66,13 +70,13 @@ const confirmBtn = (index) => {
           {{ item.count }}
           <button @click="updateCount(index, 1)">+</button>
         </td>
-        <td v-if="isEditItemName && editId === index">
-          <button @click="confirmBtn(index)">確定</button>
+        <template v-if="isEditItemName && editIndex === index">
+          <button @click="editState(index, 'confirm')">確定</button>
+          <button @click="editState(index, 'cancel')">取消</button>
+        </template>
+        <td v-else>
+          <button @click="editState(index, 'edit')">編輯品名</button>
         </td>
-        <td v-if="isEditItemName && editId === index">
-          <button @click="cancelBtn(index)">取消</button>
-        </td>
-        <td v-else><button @click="editItemName(index)">編輯品名</button></td>
       </tr>
     </tbody>
   </table>
