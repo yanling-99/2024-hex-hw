@@ -7,6 +7,13 @@ const items = ref([
   { item: "冬瓜檸檬", desc: "清新冬瓜配上新鮮檸檬", price: 45, count: 18 },
 ]);
 
+const minusCount = (index) => {
+  items.value[index].count--;
+};
+
+const addCount = (index) => {
+  items.value[index].count++;
+};
 </script>
 
 <template>
@@ -21,10 +28,16 @@ const items = ref([
     </thead>
     <tbody>
       <tr v-for="(item, index) in items" :key="index">
-        <td>{{item.item}}</td>
-        <td><small>{{ item.desc }}</small></td>
+        <td>{{ item.item }}</td>
+        <td>
+          <small>{{ item.desc }}</small>
+        </td>
         <td>{{ item.price }}</td>
-        <td><button >-</button>{{ item.count }}<button>+</button></td>
+        <td>
+          <button @click="minusCount(index)">-</button>
+          {{ item.count }}
+          <button @click="addCount(index)">+</button>
+        </td>
       </tr>
     </tbody>
   </table>
