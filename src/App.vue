@@ -19,22 +19,17 @@ const updateCount = (index, amount) => {
 };
 
 const editState = (index, action) => {
-  switch (action) {
-    case "confirm":
-      isEditItemName.value = false;
-      items.value[index].item = newItemName.value;
-      break;
-    case "cancel":
-      isEditItemName.value = false;
-      break;
-    case "edit":
-      isEditItemName.value = true;
-      editIndex.value = index;
-      newItemName.value = items.value[index].item;
-      break;
-    default:
-      console.log("沒有任何操作");
-      break;
+  if (action === "edit") {
+    isEditItemName.value = true;
+    editIndex.value = index;
+    newItemName.value = items.value[index].item;
+  } else if (action === "confirm") {
+    editIndex.value = -1;
+    isEditItemName.value = false;
+    items.value[index].item = newItemName.value;
+  } else if (action === "cancel") {
+    editIndex.value = -1;
+    isEditItemName.value = false;
   }
 };
 </script>
